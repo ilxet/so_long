@@ -6,7 +6,7 @@
 /*   By: aadamik <aadamik@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 18:00:44 by aadamik           #+#    #+#             */
-/*   Updated: 2024/04/24 15:01:34 by aadamik          ###   ########.fr       */
+/*   Updated: 2024/04/30 23:36:26 by aadamik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 # include <X11/X.h>
 # include <X11/keysym.h>
 
-
 typedef struct s_data
 {
 	int 	ar_width;
@@ -43,6 +42,15 @@ typedef struct s_data
 	int		coll_count;
 	int		moves;
 	int		e_count;
+	int		cpy_coll_count;
+	int		cpy_exit_count;
+	int		px_cpy;
+	int		py_cpy;
+	void * img_background;
+	void * img_player;
+	void * img_wall;
+	void * img_collectible;
+	void * img_exit;
 	// int		y;
 	// int		x;
 } t_data;
