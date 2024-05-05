@@ -3,5 +3,23 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": []
-}
+    "configurations": [
+      {
+        "name": "C/C++: clang build and debug active file",
+        "type": "by-gdb",
+        "request": "Launch(gdb)",
+        "program": "${fileDirname}/${fileBasenameNoExtension}",
+        "args": [
+            "map.ber"
+        ],
+        "stopAtEntry": true,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "lldb",
+        "preLaunchTask": "C/C++: clang build active file"
+      }
+    ]
+  }
+
+

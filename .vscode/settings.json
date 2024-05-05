@@ -1,5 +1,20 @@
 {
-    "files.associations": {
-        "x.h": "c"
-    }
-}
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "C/C++: clang build and debug active file",
+        "type": "by-gdb",
+        "request": "launch",
+        "program": "${fileDirname}/${fileBasenameNoExtension}",
+        "args": [
+            "map.ber"
+        ],
+        "stopAtEntry": true,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "lldb",
+        "preLaunchTask": "C/C++: clang build active file"
+      }
+    ]
+  }

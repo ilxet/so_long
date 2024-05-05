@@ -6,16 +6,13 @@
 /*   By: aadamik <aadamik@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 18:00:44 by aadamik           #+#    #+#             */
-/*   Updated: 2024/04/30 23:36:26 by aadamik          ###   ########.fr       */
+/*   Updated: 2024/05/05 15:13:21 by aadamik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-# ifndef MAX_LINE_LENGTH
-#  define MAX_LINE_LENGTH 100
-#  define MAX_LINES 100
 // #  define WIDTH 2000
 // #  define HEIGHT 1000
 
@@ -51,9 +48,8 @@ typedef struct s_data
 	void * img_wall;
 	void * img_collectible;
 	void * img_exit;
-	// int		y;
-	// int		x;
+	int		map_len;
+	int		map_height;
 } t_data;
 
-# endif
 #endif

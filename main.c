@@ -6,19 +6,19 @@
 /*   By: aadamik <aadamik@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 18:02:53 by aadamik           #+#    #+#             */
-/*   Updated: 2024/05/01 17:08:57 by aadamik          ###   ########.fr       */
+/*   Updated: 2024/05/05 17:50:05 by aadamik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void free_map(char **map)
+void free_map(char **map, t_data *data)
 {
 	int x;
-
+ 
 	x = 0;
-	while (x++ < MAX_LINES)
-		free(map[x]);
+	while (x < data->map_height)
+		free(map[x++]);
 	free(map);
 }
 
@@ -62,11 +62,40 @@ int on_destroy(t_data *data)
 	exit(0);
 }
 
-int get_map(char *map_name, t_data *data)
+void get_map_lenght(t_data *data, char *filepath)
 {
 	int fd;
 	int y;
 	char *line;
+	
+	y = 1;
+	fd = open(filepath, O_RDONLY);
+	if (fd == -1 )
+	{
+		ft_printf("Error\nWrong map name\n");
+		exit(1);
+	}
+	line = get_next_line(fd);
+	data->map_len = ft_strlen(line) - 1;
+	while (line != NULL && ft_strlen(line) > 2)
+	{
+		free(line);
+		line = get_next_line(fd);
+		if(!line)
+			break;
+		y++;
+	}
+	// printf("%i\n", data->map_len);
+	data->map_height = y;
+	close(fd);
+	return;
+}
+
+int get_map(char *map_name, t_data *data)
+{
+	int fd;
+	int y;
+	// char *line;
 	char *filepath;
 
 	filepath = malloc(sizeof(char) * (ft_strlen(map_name) + 14));
@@ -76,36 +105,43 @@ int get_map(char *map_name, t_data *data)
 	// filepath = ft_strdup("sources/maps/");
 	ft_strlcat(filepath, map_name, ft_strlen(filepath) + ft_strlen(map_name) + 1);
 	y = 0;
-	data->map = malloc(MAX_LINES * sizeof(char *));
+	get_map_lenght(data, filepath);
+	data->map = malloc((data->map_height + 1) * sizeof(char *));
 	if (data->map == NULL)
 		return (free(filepath), 1);
-	while (y < MAX_LINES)
-	{
-		data->map[y] = malloc(MAX_LINE_LENGTH * sizeof(char));
-		if (data->map[y] == NULL)
-			return (free(filepath), free(data->map), 1);
-		y++;
-	}
+	// while (y < data->map_height)
+	// {
+	// 	data->map[y] = malloc((data->map_len + 1) * sizeof(char));
+	// 	if (data->map[y] == NULL)
+	// 	{
+	// 		// while(y-- > 0)
+	// 		// 	free(data->map[y]);
+	// 		return (free(filepath), free(data->map), 1);
+	// 	}
+	// 	y++;
+	// }
 	fd = open(filepath, O_RDONLY);
 	free(filepath);
 	if (fd == -1)
-		return (ft_printf("Error\nWrong map name\n"), free_map(data->map), 0);
+		return (ft_printf("Error\nWrong map name\n"), free_map(data->map, data), 0);
 	y = 0;
-	// line = malloc(sizeof(char) * MAX_LINE_LENGTH);
-	// if (line == NULL)
-	// {
-	// 	return(0);
-	// }
-	
-	while ((line = get_next_line(fd)) != NULL)
+	while (y < data->map_height)
 	{
-		if (ft_strlen(line) != 0) {
-			ft_strlcpy(data->map[y++], line, MAX_LINE_LENGTH);
-			free(line);
-		}
+		data->map[y] = get_next_line(fd);
+		y++;
 	}
+	// while ((line = get_next_line(fd)) != NULL)
+	// {
+	// 	if (ft_strlen(line) != 0) {
+	// 		ft_strlcpy(data->map[y], line, data->map_len + 1);
+	// 		y++;
+	// 		free(line);
+	// 	}
+	// }
+	data->map[y] = NULL;
+	close(fd);
 	data->ar_height = y;
-	free(line);
+	// free(line);
 	return (0);
 }
 
@@ -116,6 +152,8 @@ int len_maps_line(char *str)
 
 	i = 0;
 	counter = 0;
+	if(!str)
+		return (0);
 	while (str[i])
 	{
 		if (str[i] == '1' || str[i] == '0' || str[i] == 'P' || str[i] == 'C' || str[i] == 'E')
@@ -125,18 +163,30 @@ int len_maps_line(char *str)
 	return (counter);
 }
 
-int check_wrong_chars(t_data *data)
+int ft_strlen_char(char *str)
 {
-	int len_of_good_chars;
 	int i;
 
-	len_of_good_chars = len_maps_line(data->map[0]);
+	i = 0;
+	while (str[i] && str[i] != '\n')
+		i++;
+	return (i);
+}
+
+int check_wrong_chars(t_data *data)
+{
+	// int len_of_good_chars;
+	int i;
+	// len_of_good_chars = len_maps_line(data->map[0]);
 	i = 0;
 	while (data->map[i] && len_maps_line(data->map[i]) != 0)
 	{
-		data->map[i][len_of_good_chars] = '\0';
-		if (ft_strlen(data->map[i]) != len_maps_line(data->map[i]))
+		printf("check 2\n");
+		// data->map[i][len_of_good_chars] = '\0';
+		if (ft_strlen_char(data->map[i]) != len_maps_line(data->map[i]))
+		{
 			return (0);
+		}
 		i++;
 	}
 	return (1);
@@ -179,18 +229,18 @@ int check_for_ones(t_data *data, int y, int x)
 	while (data->map[0][j] == '1')
 		j++;
 	i = 0;
-	while (data->map[y - 1][i] == '1')
+	while (data->map[data->map_height - 1][i] == '1')
 		i++;
 	if (j != x || i != x)
-		return (0);
+		return (printf("HALO1\n"), 0);
 	j = 0;
-	while (data->map[j][0] == '1')
+	while (data->map[j] && data->map[j][0] == '1')
 		j++;
 	i = 0;
-	while (data->map[i][x - 1] == '1')
+	while (data->map[i] && data->map[i][x - 1] == '1')
 		i++;
 	if (j != y || i != y)
-		return (0);
+		return (printf("HALO2\n"), 0);
 	return (1);
 }
 
@@ -209,7 +259,7 @@ int check_surrounded(t_data *data)
 	}
 	// data->y = y;
 	// data->x = x;
-	if (!check_for_ones(data, y, x))
+	if (!check_for_ones(data, data->map_height, data->map_len))
 		return (ft_printf("Error\nMap is not surrounded by the walls\n"), 0);
 	return (1);
 }
@@ -244,9 +294,10 @@ void get_cpy_data(t_data *data)
 
 void fill(t_data *data, int y, int x)
 {
-	if (y < 0 || y >= data->ar_height || x < 0 || x >= data->ar_width || data->map_copy[y][x] == 'E' || data->map_copy[y][x] == '1')
+	if (y < 0 || y >= data->ar_height || x < 0 || x >= data->map_len || data->map_copy[y][x] == 'E' || data->map_copy[y][x] == '1')
 	{
-		data->map_copy[y][x] = '1';
+		if (data->map_copy[y][x] != '\0')
+			data->map_copy[y][x] = '1';
 		return;
 	}
 	data->map_copy[y][x] = '1';
@@ -274,7 +325,6 @@ int check_take_all_coll_exit(t_data *data)
 		}
 		i++;
 	}
-	printf("Check 2\n");
 	get_cpy_data(data);
 	fill(data, data->py_cpy, data->px_cpy);
 	// usunac po sprawdzeniu
@@ -307,9 +357,13 @@ int check_map(t_data *data)
 	i = 0;
 	len_of_line = len_maps_line(data->map[0]);
 	data->ar_width = len_of_line;
-	while (data->map[i])
+	while (data->map[i] && i < data->map_height)
 	{
-		if (len_of_line != len_maps_line(data->map[i]) && len_maps_line(data->map[i]) != 0)
+		// printf("len_of_line: %d\n", len_of_line);
+		// printf("len_maps_line: %d\n", len_maps_line(data->map[i]));
+		// printf("ft_strlen: %d\n", ft_strlen(data->map[i]));
+		// printf("i: %d\n", i);
+		if (len_of_line != len_maps_line(data->map[i]))
 		{
 			return (ft_printf("Error\nPlease provide a map that will be a rectangle out of correct chars\n"), 0);
 		}
@@ -323,8 +377,8 @@ int check_map(t_data *data)
 		return (0);
 	if (!check_take_all_coll_exit(data))
 		return (0);
-	if (data->ar_height > 31 || data->ar_width > 60)
-		return (ft_printf("Error\nMap is to big\n", data->ar_width), 0);
+	if (data->map_height > 31 || data->map_len > 60)
+		return (ft_printf("Error\nMap is to big\n"), 0);
 	return (1);
 }
 
@@ -495,28 +549,32 @@ void init_struct(t_data *data)
 	data->img_wall = NULL;
 	data->img_collectible = NULL;
 	data->img_exit = NULL;
+	data->map_len = 0;
+	data->map_height = 0;
 }
 
 int main(int argc, char **argv)
 {
 	t_data data;
-
+	
 	if (argc == 2)
 	{
+		if(!argv[1] || ft_strlen(argv[1]) == 0)
+			return (ft_printf("Wrong map name\n"), 1);
 		init_struct(&data);
 		get_map(argv[1], &data);
 		if (check_map(&data))
 		{
 			data.moves = 0;
 			data.mlx_ptr = mlx_init();
-			data.win_ptr = mlx_new_window(data.mlx_ptr, data.ar_width * 64, data.ar_height * 64, "game2d");
+			data.win_ptr = mlx_new_window(data.mlx_ptr, data.map_len * 64, data.map_height * 64, "game2d");
 
 			render_map(&data);
 			mlx_hook(data.win_ptr, 17, 1L << 17, on_destroy, &data);
 			mlx_hook(data.win_ptr, 2, 1L << 0, key_press, &data);
 			mlx_loop(data.mlx_ptr);
 		}
-		free_map(data.map);
+		free_map(data.map, &data);
 	}
 	else
 		write(1, "Error, no correct path to map", 29);
