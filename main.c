@@ -6,7 +6,7 @@
 /*   By: aadamik <aadamik@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 18:02:53 by aadamik           #+#    #+#             */
-/*   Updated: 2024/05/05 17:50:05 by aadamik          ###   ########.fr       */
+/*   Updated: 2024/05/05 18:05:39 by aadamik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,10 +311,10 @@ int check_take_all_coll_exit(t_data *data)
 {
 	int i = 0;
 //	data->map_copy = malloc(sizeof(char *) * data->ar_height + 1);
-	data->map_copy = ft_calloc(data->ar_height + 1, sizeof(char *));
+	data->map_copy = ft_calloc(data->map_height + 1, sizeof(char *));
 	if (!data->map_copy)
 		return (ft_printf("Error\nFailed to allocate memory\n"), 0);
-	while (data->map[i] && ft_strlen(data->map[i]) >= 3)
+	while (data->map[i])
 	{
 		data->map_copy[i] = ft_strdup(data->map[i]);
 		if (!data->map_copy[i])
@@ -344,9 +344,12 @@ int check_take_all_coll_exit(t_data *data)
 	//
 	get_cpy_data(data);
 	if (data->cpy_coll_count != 0 || data->cpy_exit_count != 0)
+	{
+		free_map(data->map_copy, data);
 		return (ft_printf("Error\nNot all collectibles or exit are reachible.\n"), 0);
-	// return (free_map(data->map_copy), 1);
-	return (1);
+	}
+	return (free_map(data->map_copy, data), 1);
+	// return (1);
 }
 
 int check_map(t_data *data)
