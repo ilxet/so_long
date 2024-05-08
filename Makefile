@@ -1,6 +1,14 @@
 NAME = so_long
 
-SRC	=	main.c								\
+SRC	=	a_destroy.c							\
+		b_get_map.c							\
+		b1_c1_helper.c						\
+		c_check_map.c						\
+		c1_check_map_flood_fill.c			\
+		d_load_image_render.c				\
+		e_move.c 							\
+		f_init.c							\
+		g_main.c							\
 		./sources/gnl/get_next_line.c 		\
 		./sources/gnl/get_next_line_utils.c	\
 
