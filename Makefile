@@ -9,8 +9,8 @@ SRC	=	a_destroy.c							\
 		e_move.c 							\
 		f_init.c							\
 		g_main.c							\
-		./sources/gnl/get_next_line.c 		\
-		./sources/gnl/get_next_line_utils.c	\
+		./sources/gnl1/get_next_line.c 		\
+		./sources/gnl1/get_next_line_utils.c\
 
 
 OBJ = $(SRC:.c=.o)
@@ -25,8 +25,8 @@ MLX_DIR = ./minilibx-linux
 
 MLX = ./minilibx-linux/libmlx.a
 
-LIBFTPRINTF = ./sources/ft_printf/libftprintf.a
-LIBFTPRINTF_DIR = ./sources/ft_printf
+LIBFTPRINTF = ./sources/printf/libftprintf.a
+LIBFTPRINTF_DIR = ./sources/printf
 
 all: $(NAME)
 

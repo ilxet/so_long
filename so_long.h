@@ -6,7 +6,7 @@
 /*   By: aadamik <aadamik@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 18:00:44 by aadamik           #+#    #+#             */
-/*   Updated: 2024/05/08 17:19:43 by aadamik          ###   ########.fr       */
+/*   Updated: 2024/05/08 20:29:58 by aadamik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 // #  define HEIGHT 1000
 
 # include "minilibx-linux/mlx.h"
-# include "sources/gnl/get_next_line.h"
-# include "sources/ft_printf/ft_printf.h"
+# include "sources/gnl1/get_next_line.h"
+# include "sources/printf/ft_printf.h"
 # include <stdio.h>
 # include <fcntl.h>
 # include <unistd.h>
@@ -53,14 +53,14 @@ typedef struct s_data
 	char	*path_wall;
 	char	*path_collectible;
 	char	*path_exit;
-} t_data;
+}	t_data;
 
 void	free_map(char **map, t_data *data);
 void	destroy_images_helper(t_data *data);
 void	destroy_images(t_data *data);
 int		on_destroy(t_data *data);
 void	get_map_lenght(t_data *data, char *filepath);
-char	*get_filename (char *map_name);
+char	*get_filename(char *map_name);
 int		get_map(char *map_name, t_data *data);
 int		len_maps_line(char *str);
 int		ft_strlen_char(char *str);
@@ -87,4 +87,5 @@ int		main(int argc, char **argv);
 void	print_error_free_map(t_data *data);
 void	print_and_free2(t_data *data);
 void	print_error3(void);
+
 #endif

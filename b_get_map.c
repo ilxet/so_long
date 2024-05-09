@@ -6,7 +6,7 @@
 /*   By: aadamik <aadamik@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 18:00:35 by aadamik           #+#    #+#             */
-/*   Updated: 2024/05/08 16:56:12 by aadamik          ###   ########.fr       */
+/*   Updated: 2024/05/08 21:18:07 by aadamik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ void	get_map_lenght(t_data *data, char *filepath)
 		exit(1);
 	}
 	line = get_next_line(fd);
+	if (!line)
+	{
+		ft_printf("Error\nWrong map\n");
+		exit(1);
+	}
 	data->map_len = ft_strlen(line) - 1;
 	while (line != NULL && ft_strlen(line) > 2)
 	{
